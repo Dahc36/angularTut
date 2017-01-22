@@ -1,19 +1,30 @@
 angular
 	.module('indexApp')
-	.controller('appController', function($scope, cribsFactory){
+	.controller('appController', function($scope, cribsFactory, valuesFactory){
 
-		$scope.showMessage = false;
 		$scope.info = {
-			hello: "Hello World!",
-			showMessage: false,
-			cribs: []
+			cribs: [],
+			values: [],
+			price: {
+				min: 0,
+				max: 1000000
+			}
+		};
+
+		$scope.newListing = {};
+
+		$scope.addCrib = function(newListing){
+			newListing.image = 'default-crib';
+			$scope.info.cribs.push(newListing);
+			$scope.newListing = {};
 		};
 
 		cribsFactory.getCribs().then(function(data){
 			$scope.info.cribs = data.data;
-			console.log(data.data);
 		}, function(error){
 			console.log(error);
 		});
+
+		$scope.info.values = valuesFactory.getValues();
 
 	});

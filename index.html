@@ -8,6 +8,10 @@
 	<script src="js/index.js"></script>
 	<script src="js/appController.js"></script>
 	<script src="js/cribsFactory.js"></script>
+	<script src="js/valuesFactory.js"></script>
+	<script src="js/cribsFilter.js"></script>
+	<!-- CSS -->
+	<link rel="stylesheet" href="css/style.css">
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<!-- ui Bootstrap -->
@@ -19,6 +23,7 @@
 
 	<div ng-controller="appController">
 
+	<!-- NavBar -->
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
@@ -28,7 +33,142 @@
 		</nav>
 
 		<div class="container">
-			<div class="col-sm-4" ng-repeat="crib in info.cribs">
+			<div class="col-sm-12 price-form">
+
+				<!-- Filter -->
+				<div class="row price-form-row" ng-if="!addListing">
+					<div class="col-sm-6">
+						<div class="input-group">
+							<span class="input-group-addon">Min Price</span>
+							<select
+								name="minPrice"
+								id="minPrice"
+								ng-model="info.price.min"
+								class="form-control">
+									<option
+										ng-repeat="item in info.values"
+										value="{{item}}">{{item | currency}}</option>
+							</select>
+						</div>
+					</div><!-- End col-sm-6 -->
+					<div class="col-sm-6">
+						<div class="input-group">
+							<span class="input-group-addon">Max Price</span>
+							<select
+								name="maxPrice"
+								id="maxPrice"
+								ng-model="info.price.max"
+								class="form-control">
+									<option
+										ng-repeat="item in info.values"
+										value="{{item}}">{{item | currency}}</option>
+							</select>
+						</div>
+					</div><!-- End col-sm-6 -->
+				</div><!-- End row -->
+
+				<button
+					class="btn btn-primary"
+					ng-click="addListing = !addListing"
+					ng-show="!addListing">
+					Add Listing
+				</button>
+				<button
+					class="btn btn-danger"
+					ng-click="addListing = !addListing"
+					ng-show="addListing">
+					Close
+				</button>
+
+				<!-- Add listing -->
+				<div
+					class="listing-form"
+					ng-if="addListing">
+					<h3>Add a Listing</h3>
+					<div class="row listing-form-row">
+						<div class="col-sm-4">
+							<div class="input-group">
+								<span class="input-group-addon">Address</span>
+								<input
+									type="text"
+									placeholder="Enter the address"
+									class="form-control"
+									ng-model="newListing.address">
+							</div>
+						</div><!-- End col-sm-4 -->
+						<div class="col-sm-4">
+							<div class="input-group">
+								<span class="input-group-addon">Price</span>
+								<input
+									type="text"
+									placeholder="Enter the price"
+									class="form-control"
+									ng-model="newListing.price">
+							</div>
+						</div><!-- End col-sm-4 -->
+						<div class="col-sm-4">
+							<div class="input-group">
+								<span class="input-group-addon">Type</span>
+								<select
+									type="select"
+									name="propertyType"
+									id="propertyType"
+									class="form-control"
+									ng-model="newListing.type">
+									<option value="House">House</option>
+									<option value="Condo">Condo</option>
+									<option value="Duplex">Duplex</option>
+									<option value="Apartment">Apartment</option>
+								</select>
+							</div>
+						</div><!-- End col-sm-4 -->
+						<div class="col-sm-4">
+							<div class="input-group">
+								<span class="input-group-addon">Bedrooms</span>
+								<input
+									type="text"
+									placeholder="Bedrooms"
+									class="form-control"
+									ng-model="newListing.details.bedrooms">
+							</div>
+						</div><!-- End col-sm-4 -->
+						<div class="col-sm-4">
+							<div class="input-group">
+								<span class="input-group-addon">Bathrooms</span>
+								<input
+									type="text"
+									placeholder="Bathrooms"
+									class="form-control"
+									ng-model="newListing.details.bathrooms">
+							</div>
+						</div><!-- End col-sm-4 -->
+						<div class="col-sm-4">
+							<div class="input-group">
+								<span class="input-group-addon">SqFt</span>
+								<input
+									type="text"
+									placeholder="SqFt"
+									class="form-control"
+									ng-model="newListing.details.area">
+							</div>
+						</div><!-- End col-sm-4 -->
+					</div><!-- End row -->
+					<button
+						class="btn btn-primary listing-button"
+						ng-click="addCrib(newListing)"
+						ng-show="addListing"
+						>
+						Add</button>
+					<pre>{{newListing | json}}</pre>
+				</div><!-- End listing-form -->
+			</div><!-- End col-sm-12 -->
+		</div><!-- End container -->
+
+		<!-- Listings -->
+		<div class="container">
+			<div
+				class="col-sm-4"
+				ng-repeat="crib in info.cribs | cribsFilter:info.price | orderBy: '-id'">
 				<div class="thumbnail">
 					<img class="img-responsive" ng-src="images/{{crib.image}}.jpg" alt="">
 					<div class="caption">
