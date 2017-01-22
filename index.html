@@ -18,18 +18,55 @@
 <body>
 
 	<div ng-controller="appController">
-		<h1>
-			{{data.hello}}
-		</h1>
 
-		<div class="well" ng-repeat="crib in cribs">
-			<h3>{{crib.address}}</h3>
-			<p><strong>Type: </strong>{{crib.type}}</p>
-			<p><strong>Description: </strong>{{crib.description}}</p>
-			<p><strong>Address: </strong>{{crib.address}}</p>
-		</div>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">AngularTut</a>
+				</div>
+			</div>
+		</nav>
 
-	</div>
+		<div class="container">
+			<div class="col-sm-4" ng-repeat="crib in info.cribs">
+				<div class="thumbnail">
+					<img class="img-responsive" ng-src="images/{{crib.image}}.jpg" alt="">
+					<div class="caption">
+						<div ng-hide="showDetails === true">
+							<h3><i class="glyphicon glyphicon-tag"></i> {{crib.price | currency}}</h3>
+							<h4>
+								<i class="glyphicon glyphicon-home"></i> {{crib.address}}
+								<span class="label label-primary label-sm">{{crib.type}}</span>
+							</h4>
+						</div>
+
+						<button
+							class="btn btn-xs btn-success"
+							ng-hide="showDetails === true"
+							ng-click="showDetails = !showDetails">
+							Details</button>
+
+						<button
+							class="btn btn-xs btn-danger"
+							ng-show="showDetails === true"
+							ng-click="showDetails = !showDetails">
+							Close</button>
+
+						<div class="details" ng-show="showDetails === true">
+							<h4>
+								<span class="label label-primary label-sm">Beds: {{crib.details.bedrooms}}</span>
+								<span class="label label-primary label-sm">Baths: {{crib.details.bathrooms}}</span>
+								<span class="label label-primary label-sm">SqFt: {{crib.details.area}}</span>
+							</h4>
+							<p>{{crib.description}}</p>
+						</div>
+
+					</div><!-- End caption -->
+				</div><!-- End thumbnail -->
+			</div><!-- End col-sm-4 -->
+		</div><!-- End container -->
+
+	</div><!-- End ng-controller -->
 
 </body>
 </html>
